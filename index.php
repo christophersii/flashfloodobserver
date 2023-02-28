@@ -1,7 +1,7 @@
 <?php
-include("config.php");
+    include("config.php");
 
-$query= $connect->query("SELECT * FROM `admin`");
+    $query= $connect->query("SELECT * FROM admin");
 ?>
 
 <table border="1">
