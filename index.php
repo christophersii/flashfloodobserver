@@ -1,6 +1,6 @@
 <?php
 include("config.php");
-$query= $connect->query("SELECT * FROM admin");
+$query= $conn->query("SELECT * FROM admin");
 ?>
 
 <table border="1">
