@@ -16,7 +16,6 @@ $query= $connect->query("SELECT * FROM admin");
     $no= 1;
     while($row= $query->fetch_assoc()){
         echo "<tr>
-            <td>$no</td>
             <td>{$row['admin_id']}</td>
             <td>{$row['admin_user']}</td>
             <td>{$row['admin_password']}</td>
