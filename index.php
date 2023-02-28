@@ -1,6 +1,5 @@
 <?php
 include("config.php");
-
 $query= $connect->query("SELECT * FROM admin");
 ?>
 
@@ -16,14 +15,14 @@ $query= $connect->query("SELECT * FROM admin");
     <?php
     $no= 1;
     while($row= $query->fetch_assoc()){
-        echo "<tr>"
-        echo "<td>".$no."</td>";
-        echo "<td>".$row['admin_id']."</td>";
-        echo "<td>".$row['admin_username']."</td>";
-        echo "<td>".$row['admin_password']."</td>";
-        echo "<td>".$row['admin_email']."</td>";
-        echo "<td>".$row['admin_phone']."</td>";
-        echo "</tr>";
+        echo "<tr>
+            <td>$no</td>
+            <td>{$row['admin_id']}</td>
+            <td>{$row['admin_username']}</td>
+            <td>{$row['admin_password']}</td>
+            <td>{$row['admin_email']}</td>
+            <td>{$row['admin_phone']}</td>
+        </tr>";
         $no++;
     }
     ?>
