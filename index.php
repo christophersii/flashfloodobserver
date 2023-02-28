@@ -23,7 +23,7 @@ $query= $connect->query("SELECT * FROM `admin`");
         echo "<td>".$row['admin_password']."</td>";
         echo "<td>".$row['admin_email']."</td>";
         echo "<td>".$row['admin_phone']."</td>";
-        echo "</tr>";å
+        echo "</tr>";
         $no++;
     }
     ?>
