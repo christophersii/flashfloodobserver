@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$servername = "localhost";
+$servername = "us-cdbr-east-06.cleardb.net";
 
 // REPLACE with your Database name
 $dbname = "heroku_3442ee38bf9fb24";
