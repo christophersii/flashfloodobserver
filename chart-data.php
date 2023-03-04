@@ -3,14 +3,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$servername = "localhost";
+//$servername = "localhost";
+$servername = "us-cdbr-east-06.cleardb.net";
 
 // REPLACE with your Database name
 $dbname = "heroku_3442ee38bf9fb24";
 // REPLACE with Database user
-$username = "root";
+$username = "b005c8a97ae61d";
 // REPLACE with Database user password
-$password = "";
+$password = "04eca8ce";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
