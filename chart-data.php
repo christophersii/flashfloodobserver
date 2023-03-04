@@ -1,9 +1,12 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 $servername = "localhost";
 
 // REPLACE with your Database name
-$dbname = "flashfloodobservers";
+$dbname = "heroku_3442ee38bf9fb24";
 // REPLACE with Database user
 $username = "root";
 // REPLACE with Database user password
@@ -16,7 +19,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 
-$sql = "SELECT id, value1, value2, value3, reading_time FROM Sensor order by reading_time desc limit 40";
+$sql = "SELECT id, value1, reading_time FROM tof_sensor order by reading_time desc limit 40";
 
 $result = $conn->query($sql);
 
@@ -37,13 +40,9 @@ foreach ($readings_time as $reading){
 }*/
 
 $value1 = json_encode(array_reverse(array_column($sensor_data, 'value1')), JSON_NUMERIC_CHECK);
-$value2 = json_encode(array_reverse(array_column($sensor_data, 'value2')), JSON_NUMERIC_CHECK);
-$value3 = json_encode(array_reverse(array_column($sensor_data, 'value3')), JSON_NUMERIC_CHECK);
 $reading_time = json_encode(array_reverse($readings_time), JSON_NUMERIC_CHECK);
 
 /*echo $value1;
-echo $value2;
-echo $value3;
 echo $reading_time;*/
 
 $result->free();
@@ -68,20 +67,16 @@ $conn->close();
     }
   </style>
   <body>
-    <h2>ESP Weather Station</h2>
-    <div id="chart-temperature" class="container"></div>
-    <div id="chart-humidity" class="container"></div>
-    <div id="chart-pressure" class="container"></div>
+    <h2>Flash Flood Observer</h2>
+    <div id="chart-water-level" class="container"></div>
 <script>
 
 var value1 = <?php echo $value1; ?>;
-var value2 = <?php echo $value2; ?>;
-var value3 = <?php echo $value3; ?>;
 var reading_time = <?php echo $reading_time; ?>;
 
 var chartT = new Highcharts.Chart({
-  chart:{ renderTo : 'chart-temperature' },
-  title: { text: 'BME280 Temperature' },
+  chart:{ renderTo : 'chart-water-level' },
+  title: { text: 'Water Level Reading' },
   series: [{
     showInLegend: false,
     data: value1
@@ -97,55 +92,7 @@ var chartT = new Highcharts.Chart({
     categories: reading_time
   },
   yAxis: {
-    title: { text: 'Temperature (Celsius)' }
-    //title: { text: 'Temperature (Fahrenheit)' }
-  },
-  credits: { enabled: false }
-});
-
-var chartH = new Highcharts.Chart({
-  chart:{ renderTo:'chart-humidity' },
-  title: { text: 'BME280 Humidity' },
-  series: [{
-    showInLegend: false,
-    data: value2
-  }],
-  plotOptions: {
-    line: { animation: false,
-      dataLabels: { enabled: true }
-    }
-  },
-  xAxis: {
-    type: 'datetime',
-    //dateTimeLabelFormats: { second: '%H:%M:%S' },
-    categories: reading_time
-  },
-  yAxis: {
-    title: { text: 'Humidity (%)' }
-  },
-  credits: { enabled: false }
-});
-
-
-var chartP = new Highcharts.Chart({
-  chart:{ renderTo:'chart-pressure' },
-  title: { text: 'BME280 Pressure' },
-  series: [{
-    showInLegend: false,
-    data: value3
-  }],
-  plotOptions: {
-    line: { animation: false,
-      dataLabels: { enabled: true }
-    },
-    series: { color: '#18009c' }
-  },
-  xAxis: {
-    type: 'datetime',
-    categories: reading_time
-  },
-  yAxis: {
-    title: { text: 'Pressure (hPa)' }
+    title: { text: 'Water Level (millimeter)' }
   },
   credits: { enabled: false }
 });
