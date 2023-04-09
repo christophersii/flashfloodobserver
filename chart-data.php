@@ -32,6 +32,7 @@ foreach ($readings_time as $reading){
     $i += 1;
 }
 
+$device_id= json_encode(array_reverse(array_column($sensor_data, 'device_id')), JSON_NUMERIC_CHECK);
 $water_level = json_encode(array_reverse(array_column($sensor_data, 'water_level')), JSON_NUMERIC_CHECK);
 $rainfall = json_encode(array_reverse(array_column($sensor_data, 'rainfall')), JSON_NUMERIC_CHECK);
 $temperature = json_encode(array_reverse(array_column($sensor_data, 'temperature')), JSON_NUMERIC_CHECK);
@@ -73,11 +74,35 @@ $conn->close();
     <div id="chart-humidity" class="container"></div>
 <script>
 
+var device_id = <?php echo $device_id; ?>;
 var water_level = <?php echo $water_level; ?>;
 var rainfall = <?php echo $rainfall; ?>;
 var temperature = <?php echo $temperature; ?>;
 var humidity = <?php echo $humidity; ?>;
 var reading_time = <?php echo $reading_time; ?>;
+
+var chartD = new Highcharts.Chart({
+  chart:{ renderTo : 'chart-device_id' },
+  title: { text: 'Device ID' },
+  series: [{
+    showInLegend: false,
+    data: device_id
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    },
+    series: { color: '#059e8a' }
+  },
+  xAxis: { 
+    type: 'datetime',
+    categories: reading_time
+  },
+  yAxis: {
+    title: { text: 'Device ID' }
+  },
+  credits: { enabled: false }
+});
 
 var chartW = new Highcharts.Chart({
   chart:{ renderTo : 'chart-water_level' },
@@ -169,7 +194,7 @@ var chartH = new Highcharts.Chart({
     line: { animation: false,
       dataLabels: { enabled: true }
     },
-    series: { color: '#18009c' }
+    series: { color: '#18009s' }
   },
   xAxis: {
     type: 'datetime',
