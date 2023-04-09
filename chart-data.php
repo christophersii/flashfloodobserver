@@ -12,7 +12,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
 
-$sql = "SELECT id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading order by reading_time desc limit 40";
+$sql = "SELECT reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading order by reading_time desc limit 40";
 
 $result = $conn->query($sql);
 
