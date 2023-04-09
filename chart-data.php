@@ -104,7 +104,7 @@ var chartW = new Highcharts.Chart({
 
 var chartR = new Highcharts.Chart({
   chart:{ renderTo:'chart-rainfall' },
-  title: { text: 'Rain' },
+  title: { text: 'Rainfall' },
   series: [{
     showInLegend: false,
     data: rainfall
