@@ -73,7 +73,6 @@ $conn->close();
     <div id="chart-humidity" class="container"></div>
 <script>
 
-var device_id = <?php echo $device_id; ?>;
 var water_level = <?php echo $water_level; ?>;
 var rainfall = <?php echo $rainfall; ?>;
 var temperature = <?php echo $temperature; ?>;
