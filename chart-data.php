@@ -66,15 +66,13 @@ $conn->close();
   </style>
   <body>
     <h2>Flash Flood Observer</h2>
-    
+    <h3>Device ID: <?php echo $device_id; ?> </h3>
     <div id="chart-water_level" class="container"></div>
     <div id="chart-rainfall" class="container"></div>
     <div id="chart-temperature" class="container"></div>
     <div id="chart-humidity" class="container"></div>
 <script>
-
 var device_id = <?php echo $device_id; ?>;
-<h3>Device ID: <?php echo $device_id; ?> </h3>
 var water_level = <?php echo $water_level; ?>;
 var rainfall = <?php echo $rainfall; ?>;
 var temperature = <?php echo $temperature; ?>;
