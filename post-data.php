@@ -8,11 +8,12 @@ include("config.php");
 // Keep this API Key value to be compatible with the ESP32 code provided in the project page. If you change this value, the ESP32 sketch needs to match
 $api_key_value = "tPmAT5Ab3j7F9";
 
-$api_key = $water_level = $rainfall = $temperature = $humidity ="";
+$api_key = $device_id = $water_level = $rainfall = $temperature = $humidity ="";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $api_key = test_input($_POST["api_key"]);
     if($api_key == $api_key_value) {
+        $device_id = test_input($_POST["device_id"]);
         $water_level = test_input($_POST["water_level"]);
         $rainfall = test_input($_POST["rainfall"]);
         $temperature = test_input($_POST["temperature"]);
@@ -26,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } 
         
         $sql = "INSERT INTO sensor_reading (water_level, rainfall, temperature, humidity)
-        VALUES ('" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "')";
+        VALUES ('" . $device_id . "', '" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "')";
         
         if ($conn->query($sql) === TRUE) {
             echo "New record created successfully";
