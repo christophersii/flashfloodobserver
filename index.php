@@ -11,8 +11,8 @@ $query= $conn->query("SELECT * FROM admin");
     <tr>
         <td>Admin ID</td>
         <td>Admin Name</td>
-        <td>Password</td>
         <td>E-mail</td>
+        <td>Password</td>
         <td>Phone</td>
     </tr>
 
@@ -22,9 +22,9 @@ $query= $conn->query("SELECT * FROM admin");
         echo "<tr>
             <td>{$row['admin_id']}</td>
             <td>{$row['admin_name']}</td>
+            <td>{$row['admin_email']}</td>
             <td>{$row['admin_password']}</td>
-            <td>{$row['admin_address']}</td>
-            <td>{$row['admin_contact_no']}</td>
+            <td>{$row['admin_phone']}</td>
         </tr>";
         $no++;
     }
