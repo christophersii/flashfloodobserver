@@ -112,7 +112,15 @@ var chartR = new Highcharts.Chart({
   }],
   plotOptions: {
     line: { animation: false,
-      dataLabels: { enabled: true }
+      dataLabels: { 
+        enabled: true,
+        formatter: function() {
+          if (this.y == 0) {
+            return 'Rain';
+          } else {
+            return 'Not Rain';
+          }
+        }
     }
   },
   xAxis: {
