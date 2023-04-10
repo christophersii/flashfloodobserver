@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 
 // retrieve data from database
 
-$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = '246F28D0ED58' order by reading_time desc limit 15";
+$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = '246F28D0ED58' order by reading_time desc limit 10";
 $result = $conn->query($sql);
 
 // store data in array
