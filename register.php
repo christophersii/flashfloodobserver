@@ -3,7 +3,7 @@
 include("config.php");
 
 // Create connection
-$conn = mysqli_connect($host, $username, $password, $dbname);
+//$conn = mysqli_connect($host, $username, $password, $dbname);
 
 //POST = send/save data to database
 //GET = get data from database
@@ -25,7 +25,5 @@ $sql = "INSERT INTO user (admin_email, admin_password, admin_name, admin_phone) 
     } else {
         echo json_encode(["status" => "Error"]);
     }
-
-mysqli_close($conn);
 
 ?>
