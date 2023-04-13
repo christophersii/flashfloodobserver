@@ -3,7 +3,7 @@
 include("config.php");
 
 // Create connection
-//$conn = mysqli_connect($host, $username, $password, $dbname);
+$conn = mysqli_connect($host, $username, $password, $dbname);
 
 //POST = send/save data to database
 //GET = get data from database
@@ -18,7 +18,7 @@ if(empty($admin_email) || empty($admin_password) || empty($admin_name) || empty(
     echo "Please fill in all the fields.";
 }
 
-$sql = "INSERT INTO user (admin_email, admin_password, admin_name, admin_phone) VALUES ('$admin_email', '$admin_password', '$admin_name', '$admin_phone')";
+$sql = "INSERT INTO admin (admin_email, admin_password, admin_name, admin_phone) VALUES ('$admin_email', '$admin_password', '$admin_name', '$admin_phone')";
 
     if (mysqli_query($conn, $sql)) {
         echo json_encode(["status" => "Success"]);
