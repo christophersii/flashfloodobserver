@@ -3,39 +3,35 @@
   header('Access-Control-Allow-Origin: *');
   header('Access-Control-Allow-Methods: GET');
 
-  // Get the station code from the request parameters
-  $stationCode = $_GET['station_code'];
-
   // Include the database connection details
   include('config.php');
 
-  $conn = mysqli_connect($servername, $username, $password, $dbname);
+ // Create connection
+  $conn = new mysqli($servername, $username, $password, $dbname);
 
   // Check connection
-  if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
   }
 
-  // Query to get the latest water level value for the specified station
-  $sql = "SELECT water_level FROM sensor_device d
-          JOIN sensor_reading r ON d.device_id = r.device_id
-          WHERE d.station_code = '$stationCode'
-          ORDER BY reading_time DESC
+  $stationCode = $_POST["station_code"];
+
+  // Get latest water level reading for the specified station
+  $sql = "SELECT water_level FROM sensor_device sd
+          INNER JOIN sensor_reading sr ON sr.device_id = sd.device_id
+          WHERE sd.station_code = '$stationCode'
+          ORDER BY sr.reading_time DESC
           LIMIT 1";
+  $result = $conn->query($sql);
 
-  $result = mysqli_query($conn, $sql);
-
-  if (mysqli_num_rows($result) > 0) {
-    // Return the latest water level value as a JSON object
-    $row = mysqli_fetch_assoc($result);
-    $waterLevel = $row["water_level"];
-    $response = array("water_level" => $waterLevel);
-    echo json_encode($response);
+  if ($result->num_rows > 0) {
+    // Output latest water level reading as JSON
+    $row = $result->fetch_assoc();
+    echo json_encode(array("water_level" => $row["water_level"]));
   } else {
-    // If no results are found, return an error message
-    $response = array("error" => "No water level readings found for this station");
-    echo json_encode($response);
+    echo json_encode(array("error" => "No readings found for specified station"));
   }
 
-  mysqli_close($conn);
+  $conn->close();
+
 ?>
