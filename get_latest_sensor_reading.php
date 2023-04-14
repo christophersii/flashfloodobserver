@@ -1,20 +1,29 @@
 <?php
-    require_once "config.php";
+    header('Content-Type: application/json');
 
-    $deviceId = $_POST['device_id'];
+    $device_id = $_POST['device_id'];
 
-    $query = "SELECT water_level FROM sensor_reading WHERE device_id = '$deviceId' ORDER BY reading_time DESC LIMIT 1";
-    $result = mysqli_query($con, $query);
+      // Include the database connection details
+      include('config.php');
 
-    if(mysqli_num_rows($result) > 0){
-        $row = mysqli_fetch_assoc($result);
-        $waterLevel = $row['water_level'];
-        $response['status'] = "Success";
-        $response['water_level'] = $waterLevel;
-    }else{
-        $response['status'] = "Failed";
-        $response['message'] = "Failed to get latest sensor reading.";
+    // Check connection
+    if (!$conn) {
+        die('Connection failed: ' . mysqli_connect_error());
     }
 
-    echo json_encode($response);
-?>```
+    // Query to get the latest water level reading for the device
+    $sql = "SELECT water_level FROM sensor_reading WHERE device_id = '$device_id' ORDER BY reading_time DESC LIMIT 1";
+
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+        // Fetch the latest water level reading as a string
+        $reading = mysqli_fetch_assoc($result)['water_level'];
+        echo json_encode(['status' => 'Success', 'reading' => $reading]);
+    } else {
+        echo json_encode(['status' => 'Failed']);
+    }
+
+    // Close connection
+    mysqli_close($conn);
+?>
