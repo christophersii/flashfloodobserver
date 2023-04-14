@@ -4,7 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-require 'db.php';
+require 'config.php';
 
 $postdata = file_get_contents("php://input");
 $request = json_decode($postdata);
