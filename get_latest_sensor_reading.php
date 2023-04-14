@@ -1,27 +1,24 @@
-<?php
-  // Include the database connection details
-  include('config.php');
-
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $dbname);
-
-  // Check connection
-  if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
   }
 
-  $device_id = $_POST["device_id"];
+  $stationCode = $_POST["station_code"];
 
-  // Get the latest reading for the specified device
-  $sql = "SELECT * FROM sensor_reading WHERE device_id = $device_id ORDER BY reading_time DESC LIMIT 1";
-  $result = mysqli_query($conn, $sql);
+  // Get latest water level reading for the specified station
+  $sql = "SELECT water_level FROM sensor_device sd
+          INNER JOIN sensor_reading sr ON sr.device_id = sd.device_id
+          WHERE sd.station_code = '$stationCode'
+          ORDER BY sr.reading_time DESC
+          LIMIT 1";
+  $result = $conn->query($sql);
 
-  if (mysqli_num_rows($result) > 0) {
-      $row = mysqli_fetch_assoc($result);
-      echo json_encode($row);
+  if ($result->num_rows > 0) {
+    // Output latest water level reading as JSON
+    $row = $result->fetch_assoc();
+    echo json_encode(array("water_level" => $row["water_level"]));
   } else {
-      echo "No readings found";
+    echo json_encode(array("error" => "No readings found for specified station"));
   }
 
-  mysqli_close($conn);
+  $conn->close();
+
 ?>
