@@ -1,29 +1,45 @@
 <?php
-    header('Content-Type: application/json');
+require_once 'config.php';
 
-    $device_id = $_POST['device_id'];
+// Get all stations
+$sql = "SELECT * FROM station WHERE admin_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $_POST['admin_id']);
+$stmt->execute();
+$result = $stmt->get_result();
 
-      // Include the database connection details
-      include('config.php');
-
-    // Check connection
-    if (!$conn) {
-        die('Connection failed: ' . mysqli_connect_error());
-    }
-
-    // Query to get the latest water level reading for the device
-    $sql = "SELECT water_level FROM sensor_reading WHERE device_id = '$device_id' ORDER BY reading_time DESC LIMIT 1";
-
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        // Fetch the latest water level reading as a string
-        $reading = mysqli_fetch_assoc($result)['water_level'];
-        echo json_encode(['status' => 'Success', 'reading' => $reading]);
+$stations = array();
+while ($row = $result->fetch_assoc()) {
+    $station = array(
+        "station_code" => $row['station_code'],
+        "station_name" => $row['station_name']
+    );
+    
+    // Get latest sensor reading for station
+    $sql2 = "SELECT water_level, reading_time FROM sensor_reading 
+             INNER JOIN sensor_device ON sensor_reading.device_id = sensor_device.device_id
+             WHERE sensor_device.station_code = ?
+             ORDER BY reading_time DESC
+             LIMIT 1";
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->bind_param("s", $row['station_code']);
+    $stmt2->execute();
+    $result2 = $stmt2->get_result();
+    
+    if ($result2->num_rows > 0) {
+        $row2 = $result2->fetch_assoc();
+        $station["water_level"] = $row2["water_level"];
+        $station["reading_time"] = $row2["reading_time"];
     } else {
-        echo json_encode(['status' => 'Failed']);
+        $station["water_level"] = "N/A";
+        $station["reading_time"] = "N/A";
     }
+    
+    $stations[] = $station;
+}
 
-    // Close connection
-    mysqli_close($conn);
+echo json_encode($stations);
+$stmt->close();
+$stmt2->close();
+$conn->close();
 ?>
