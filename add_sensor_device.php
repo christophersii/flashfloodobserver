@@ -6,9 +6,9 @@
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
     include_once 'config.php';
-    include_once 'sensor_device.php';
+    include_once 'config/database.php';
 
-    $database = new Database($conn);
+    $database = new Database();
     $db = $database->getConnection();
 
     $sensor_device = new SensorDevice($db);
