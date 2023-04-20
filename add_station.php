@@ -9,11 +9,12 @@ require_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (!empty($data["device_id"]) && !empty($data["station_name"]) && !empty($data["latitude"]) && !empty($data["longitude"]) && !empty($data["threshold_warning"]) && !empty($data["threshold_danger"]) && !empty($data["drainage_depth"]) && !empty($data["admin_id"])) {
+if (!empty($data["device_id"]) && !empty($data["station_name"]) && !empty($data["latitude"]) && !empty($data["longitude"]) && !empty($data["threshold_alert"]) && !empty($data["threshold_warning"]) && !empty($data["threshold_danger"]) && !empty($data["drainage_depth"]) && !empty($data["admin_id"])) {
     $device_id = $data["device_id"];
     $station_name = $data["station_name"];
     $latitude = $data["latitude"];
     $longitude = $data["longitude"];
+    $threshold_alert = $data["threshold_alert"];
     $threshold_warning = $data["threshold_warning"];
     $threshold_danger = $data["threshold_danger"];
     $drainage_depth = $data["drainage_depth"];
