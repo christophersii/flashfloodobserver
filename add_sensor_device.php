@@ -8,7 +8,7 @@
     include_once 'database.php';
     include_once 'sensor_device.php';
 
-    $database = new Database();
+    $database = new Database($conn);
     $db = $database->getConnection();
 
     $sensor_device = new SensorDevice($db);
