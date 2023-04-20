@@ -1,50 +1,51 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Max-Age: 3600");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include("config.php");
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+require_once "config.php";
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$data = json_decode(file_get_contents("php://input"));
 
-// Get the data from the POST request
-$admin_id = $_POST['admin_id'];
-$device_id = $_POST['device_id'];
-$station_name = $_POST['station_name'];
-$latitude = $_POST['latitude'];
-$longitude = $_POST['longitude'];
-$threshold_warning = $_POST['threshold_warning'];
-$threshold_danger = $_POST['threshold_danger'];
-$drainage_depth = $_POST['drainage_depth'];
+if (
+    !empty($data->device_id) &&
+    !empty($data->admin_id) &&
+    !empty($data->station_name) &&
+    !empty($data->latitude) &&
+    !empty($data->longitude) &&
+    !empty($data->threshold_warning) &&
+    !empty($data->threshold_danger) &&
+    !empty($data->drainage_depth)
+) {
+    $sql = "INSERT INTO station (station_name, latitude, longitude, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_bind_param($stmt, "sddssssi", $data->station_name, $data->latitude, $data->longitude, $data->threshold_alert, $data->threshold_warning, $data->threshold_danger, $data->drainage_depth, $data->admin_id);
 
-// Insert station data into the station table
-$sql = "INSERT INTO station (station_name, latitude, longitude, threshold_warning, threshold_danger, drainage_depth, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ssdddds", $station_name, $latitude, $longitude, $threshold_warning, $threshold_danger, $drainage_depth, $admin_id);
-$stmt->execute();
+    if (mysqli_stmt_execute($stmt)) {
+        $station_code = mysqli_insert_id($link);
 
-// Get the generated station_code
-$station_code = $conn->insert_id;
+        $sql = "INSERT INTO sensor_device (device_id, admin_id, station_code) VALUES (?, ?, ?)";
+        $stmt = mysqli_prepare($link, $sql);
+        mysqli_stmt_bind_param($stmt, "sii", $data->device_id, $data->admin_id, $station_code);
 
-// Insert the device and station_code data into the sensor_device table
-$sql2 = "INSERT INTO sensor_device (device_id, admin_id, station_code) VALUES (?, ?, ?)";
-$stmt2 = $conn->prepare($sql2);
-$stmt2->bind_param("sss", $device_id, $admin_id, $station_code);
-$stmt2->execute();
-
-// Close the prepared statements
-$stmt->close();
-$stmt2->close();
-
-// Check if both queries were successful
-if ($stmt && $stmt2) {
-    echo json_encode(array("status" => "Success"));
+        if (mysqli_stmt_execute($stmt)) {
+            http_response_code(201);
+            echo json_encode(array("message" => "Device and station were added successfully."));
+        } else {
+            http_response_code(503);
+            echo json_encode(array("message" => "Unable to add device."));
+        }
+    } else {
+        http_response_code(503);
+        echo json_encode(array("message" => "Unable to add station."));
+    }
+    mysqli_stmt_close($stmt);
 } else {
-    echo json_encode(array("status" => "Failed"));
+    http_response_code(400);
+    echo json_encode(array("message" => "Unable to add device and station. Data is incomplete."));
 }
 
-// Close connection
-$conn->close();
+mysqli_close($link);
 ?>
