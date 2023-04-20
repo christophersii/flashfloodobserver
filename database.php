@@ -1,7 +1,7 @@
 <?php
 class Database {
     // Specify your own database credentials here
-    private $host = "us-cdbr-east-06.cleardb.net"
+    private $host = "us-cdbr-east-06.cleardb.net";
     private $dbname = "heroku_3442ee38bf9fb24";
     private $username = "b005c8a97ae61d";
     private $password = "04eca8ce";
