@@ -19,7 +19,7 @@ if (
     !empty($data->threshold_danger) &&
     !empty($data->drainage_depth)
 ) {
-    $sql = "INSERT INTO station (station_name, latitude, longitude, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO station (station_name, latitude, longitude, threshold_alert, threshold_warning, threshold_danger, drainage_depth, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($link, $sql);
     mysqli_stmt_bind_param($stmt, "sddssssi", $data->station_name, $data->latitude, $data->longitude, $data->threshold_alert, $data->threshold_warning, $data->threshold_danger, $data->drainage_depth, $data->admin_id);
 
