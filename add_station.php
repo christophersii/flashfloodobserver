@@ -8,7 +8,7 @@
     include_once 'config.php';
     include_once 'station.php';
 
-    $database = new Database();
+    $database = new Database($conn);
     $db = $database->getConnection();
 
     $station = new Station($db);
