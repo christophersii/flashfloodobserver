@@ -32,4 +32,3 @@
         http_response_code(503);
         echo json_encode(array("status" => "Failed"));
     }
-?>
