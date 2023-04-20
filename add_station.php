@@ -5,10 +5,10 @@
     header("Access-Control-Max-Age: 3600");
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-    include_once 'config.php';
+    include_once 'database.php';
     include_once 'station.php';
 
-    $database = new Database($conn);
+    $database = new Database();
     $db = $database->getConnection();
 
     $station = new Station($db);
