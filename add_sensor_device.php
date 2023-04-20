@@ -5,8 +5,8 @@
     header("Access-Control-Max-Age: 3600");
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-    include_once 'config.php';
     include_once 'database.php';
+    include_once 'sensor_device.php';
 
     $database = new Database();
     $db = $database->getConnection();
