@@ -15,8 +15,6 @@ if (isset($_POST['device_id']) && isset($_POST['admin_id']) && isset($_POST['sta
     $threshold_warning = $_POST['threshold_warning'];
     $threshold_danger = $_POST['threshold_danger'];
 
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
