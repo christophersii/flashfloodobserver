@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 $admin_id = $_POST['admin_id'];
 
 // Prepare SQL query to fetch the stations
-$sql = "SELECT station_code, station_name FROM stations WHERE admin_id = ? ORDER BY station_name";
+$sql = "SELECT station_code, station_name FROM station WHERE admin_id = ? ORDER BY station_name";
 
 // Prepare and execute the SQL statement
 $stmt = $conn->prepare($sql);
