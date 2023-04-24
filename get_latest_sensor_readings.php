@@ -26,7 +26,7 @@ $sql = "SELECT s.station_code, s.station_name, sr.water_level, sr.timestamp
 
 // Prepare and execute the SQL statement
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $admin_id);
+$stmt->bind_param("s", $admin_id);
 $stmt->execute();
 
 // Bind the result to variables
