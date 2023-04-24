@@ -1,6 +1,7 @@
 <?php
-error_reporting(0);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // Database connection details
 include 'config.php';
@@ -15,14 +16,15 @@ $admin_id = $_POST['admin_id'];
 
 // Prepare SQL query to fetch the stations and their latest sensor readings
 $sql = "SELECT s.station_code, s.station_name, sr.water_level, sr.timestamp
-        FROM stations s
-        INNER JOIN sensor_readings sr ON s.station_code = sr.station_code
-        WHERE s.admin_id = ? AND sr.id IN (
+FROM stations s
+INNER JOIN sensor_readings sr ON s.station_code = sr.station_code
+WHERE s.admin_id =? AND sr.id IN (
           SELECT MAX(sr_inner.id)
-          FROM sensor_readings sr_inner
-          WHERE sr_inner.station_code = s.station_code
+FROM sensor_readings sr_inner
+WHERE sr_inner.station_code = s.station_code
         )
         ORDER BY s.station_name";
+
 
 // Prepare and execute the SQL statement
 $stmt = $conn->prepare($sql);
