@@ -40,7 +40,7 @@ $stmt->bind_result($device_id, $station_code, $station_name, $latitude, $longitu
 $results = array();
 while ($stmt->fetch()) {
   $results[] = array(
-    'device_id' => $device_id
+    'device_id' => $device_id,
     'station_code' => $station_code,
     'station_name' => $station_name,
     'latitude' => $latitude,
