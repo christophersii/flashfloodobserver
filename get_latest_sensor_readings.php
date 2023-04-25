@@ -18,8 +18,8 @@ $admin_id = $_POST['admin_id'];
 $sql = "SELECT s.station_code, s.station_name, sr.water_level, sr.reading_time
 FROM station s
 INNER JOIN sensor_reading sr ON s.station_code = sr.station_code
-WHERE s.admin_id =? AND sr.id IN (
-          SELECT MAX(sr_inner.id)
+WHERE s.admin_id =? AND sr.reading_id IN (
+          SELECT MAX(sr_inner.reading_id)
 FROM sensor_reading sr_inner
 WHERE sr_inner.station_code = s.station_code
         )
