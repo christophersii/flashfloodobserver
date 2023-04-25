@@ -41,8 +41,9 @@ $response = array(
 
 foreach ($data as $row) {
     $response['reading_time'][] = $row['reading_time'];
-    $response['water_level'][] = $row['water_level'];
-    $response['drainage_water_level'][] = $row['drainage_water_level'];
+    $response['water_level'][] = $row['drainage_water_level'];
+    //$response['water_level'][] = $row['water_level'];
+    //$response['drainage_water_level'][] = $row['drainage_water_level'];
     $response['rainfall'][] = $row['rainfall'];
     $response['temperature'][] = $row['temperature'];
     $response['humidity'][] = $row['humidity'];
