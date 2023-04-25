@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 $admin_id = $_POST['admin_id'];
 
 // Prepare SQL query to fetch the stations and their latest sensor readings
-$sql = "SELECT s.station_code, s.station_name, sr.water_level, sr.timestamp
+$sql = "SELECT s.station_code, s.station_name, sr.water_level, sr.reading_time
 FROM station s
 INNER JOIN sensor_reading sr ON s.station_code = sr.station_code
 WHERE s.admin_id =? AND sr.id IN (
