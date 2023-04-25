@@ -34,7 +34,7 @@ $stmt->bind_param("s", $admin_id);
 $stmt->execute();
 
 // Bind the result to variables
-$stmt->bind_result($station_code, $station_name, $water_level, $reading_time);
+$stmt->bind_result($station_code, $station_name, $water_level, $drainage_water_level, $reading_time);
 
 // Fetch the results and store them in an array
 $results = array();
@@ -43,6 +43,7 @@ while ($stmt->fetch()) {
     'station_code' => $station_code,
     'station_name' => $station_name,
     'water_level' => $water_level,
+    'drainage_water_level' => $drainage_water_level,
     'reading_time' => $reading_time
   );
 }
