@@ -25,8 +25,7 @@ LEFT JOIN sensor_reading sr ON sd.device_id = sr.device_id AND sr.reading_id IN 
           WHERE sd_inner.station_code = s.station_code
         )
 WHERE s.admin_id = ?
-ORDER BY s.station_name";
-
+ORDER BY s.station_code DESC";
 
 // Prepare and execute the SQL statement
 $stmt = $conn->prepare($sql);
