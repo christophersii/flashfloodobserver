@@ -42,8 +42,9 @@ while ($stmt->fetch()) {
   $results[] = array(
     'station_code' => $station_code,
     'station_name' => $station_name,
-    'water_level' => $water_level,
-    'drainage_water_level' => $drainage_water_level,
+    'water_level' => $drainage_water_level,
+    //'water_level' => $water_level,
+    //'drainage_water_level' => $drainage_water_level,
     'reading_time' => $reading_time
   );
 }
