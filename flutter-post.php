@@ -14,10 +14,24 @@ if ($conn->connect_error) {
 }
 
 // retrieve data from database
-$device_id = $_GET['device_id'];
-$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = '$device_id' order by reading_time desc limit 10";
 //$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = '246F28D0ED58' order by reading_time desc limit 10";
-$result = $conn->query($sql);
+//$result = $conn->query($sql);
+
+// Get the device_id from the POST request
+$station_code = $_POST["station_code"];
+
+// Use the device_id in the SQL query
+$sql = "SELECT sr.device_id, sr.reading_id, sr.water_level, sr.rainfall, sr.temperature, sr.humidity, sr.reading_time
+FROM sensor_reading sr
+INNER JOIN station st ON sr.device_id = st.device_id
+WHERE st.station_code = '$station_code'
+ORDER BY sr.reading_time DESC
+LIMIT 10";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $device_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
 // store data in array
 $data = array();
