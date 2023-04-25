@@ -17,15 +17,16 @@ $admin_id = $_POST['admin_id'];
 // Prepare SQL query to fetch the stations and their latest sensor readings
 $sql = "SELECT s.station_code, s.station_name, sr.water_level, sr.reading_time
 FROM station s
-INNER JOIN sensor_device sd ON s.station_code = sd.station_code
-INNER JOIN sensor_reading sr ON sd.device_id = sr.device_id
-WHERE s.admin_id = ? AND sr.reading_id IN (
+LEFT JOIN sensor_device sd ON s.station_code = sd.station_code
+LEFT JOIN sensor_reading sr ON sd.device_id = sr.device_id AND sr.reading_id IN (
           SELECT MAX(sr_inner.reading_id)
           FROM sensor_reading sr_inner
           INNER JOIN sensor_device sd_inner ON sr_inner.device_id = sd_inner.device_id
           WHERE sd_inner.station_code = s.station_code
         )
-        ORDER BY s.station_name";
+WHERE s.admin_id = ?
+ORDER BY s.station_name";
+
 
 // Prepare and execute the SQL statement
 $stmt = $conn->prepare($sql);
