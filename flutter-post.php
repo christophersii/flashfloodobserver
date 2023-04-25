@@ -3,7 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 // ... code to connect to database and retrieve data ...
 include("config.php");
 // Create connection
@@ -13,25 +12,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Get station code from POST request
+$station_code = $_POST['station_code'];
+
 // retrieve data from database
-//$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = '246F28D0ED58' order by reading_time desc limit 10";
-//$result = $conn->query($sql);
-
-// Get the device_id from the POST request
-$station_code = $_POST["station_code"];
-
-// Use the device_id in the SQL query
-$sql = "SELECT sr.device_id, sr.reading_id, sr.water_level, sr.rainfall, sr.temperature, sr.humidity, sr.reading_time
-FROM sensor_reading sr
-INNER JOIN station st ON sr.device_id = st.device_id
-WHERE st.station_code = '$station_code'
-ORDER BY sr.reading_time DESC
-LIMIT 10";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $device_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = (SELECT device_id FROM device WHERE station_code = '$station_code') order by reading_time desc limit 10";
+$result = $conn->query($sql);
 
 // store data in array
 $data = array();
