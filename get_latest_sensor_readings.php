@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 $admin_id = $_POST['admin_id'];
 
 // Prepare SQL query to fetch the stations and their latest sensor readings
-$sql = "SELECT s.station_code, s.station_name, sr.water_level, s.drainage_depth - sr.water_level AS drainage_water_level, sr.reading_time
+$sql = "SELECT s.station_code, s.station_name, sr.water_level, sr.rainfall, sr.temperature, sr.humidity, s.drainage_depth - sr.water_level AS drainage_water_level, sr.reading_time
 FROM station s
 LEFT JOIN sensor_device sd ON s.station_code = sd.station_code
 LEFT JOIN sensor_reading sr ON sd.device_id = sr.device_id AND sr.reading_id IN (
@@ -42,9 +42,12 @@ while ($stmt->fetch()) {
   $results[] = array(
     'station_code' => $station_code,
     'station_name' => $station_name,
-    'water_level' => $drainage_water_level,
-    //'water_level' => $water_level,
-    //'drainage_water_level' => $drainage_water_level,
+    //'water_level' => $drainage_water_level,
+    'water_level' => $water_level,
+    'rainfall' => $rainfall,
+    'temperature' => $temperature,
+    'humidity' => $humidity,
+    'drainage_water_level' => $drainage_water_level,
     'reading_time' => $reading_time
   );
 }
