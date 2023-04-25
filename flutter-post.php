@@ -14,8 +14,9 @@ if ($conn->connect_error) {
 }
 
 // retrieve data from database
-
-$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = '246F28D0ED58' order by reading_time desc limit 10";
+$device_id = $_GET['device_id'];
+$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = '$device_id' order by reading_time desc limit 10";
+//$sql = "SELECT device_id, reading_id, water_level, rainfall, temperature, humidity, reading_time FROM sensor_reading WHERE device_id = '246F28D0ED58' order by reading_time desc limit 10";
 $result = $conn->query($sql);
 
 // store data in array
