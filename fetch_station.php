@@ -13,7 +13,9 @@ $device_id = $_GET['device_id'];
 $admin_id = $_GET['admin_id'];
 
 // Fetch the station data using the device_id and admin_id
-$sql = "SELECT * FROM station WHERE device_id = '$device_id' AND admin_id = '$admin_id'";
+$sql = "SELECT st.* FROM sensor_device sd
+        JOIN station st ON sd.station_code = st.station_code
+        WHERE sd.device_id = '$device_id' AND sd.admin_id = '$admin_id'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
