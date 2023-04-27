@@ -2,7 +2,7 @@
 include 'config.php';
 
 // Fetch all station thresholds and latest readings
-$query = "SELECT s.station_code, s.station_name, s.threshold_alert, s.threshold_warning, s.threshold_danger, r.water_level, r.device_id
+$query = "SELECT s.station_code, s.station_name, s.threshold_alert, s.threshold_warning, s.threshold_danger, s.drainage_depth - r.water_level AS drainage_water_level, r.device_id
           FROM station s
           INNER JOIN sensor_device sd ON s.station_code = sd.station_code
           INNER JOIN (
@@ -19,7 +19,7 @@ if ($result->num_rows > 0) {
         $device_id = $row['device_id'];
         $station_code = $row['station_code'];
         $station_name = $row['station_name'];
-        $water_level = $row['water_level'];
+        $water_level = $row['drainage_water_level'];
         $threshold_alert = $row['threshold_alert'];
         $threshold_warning = $row['threshold_warning'];
         $threshold_danger = $row['threshold_danger'];
@@ -27,7 +27,7 @@ if ($result->num_rows > 0) {
         // Check if water level reaches any thresholds
         $notify_info = '';
         if ($water_level > $threshold_danger) {
-            $notify_info = "Danger: Water level at $station_name \r\nDevice ID: $device_id has reached the danger threshold.";
+            $notify_info = "Danger: Water level at $station_name with Device ID: $device_id has reached the danger threshold.";
         } elseif ($water_level >= $threshold_warning) {
             $notify_info = "Warning: Water level at $station_name \r\nDevice ID: $device_id has reached the warning threshold.";
         } elseif ($water_level >= $threshold_alert) {
