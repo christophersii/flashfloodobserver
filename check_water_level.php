@@ -26,12 +26,12 @@ if ($result->num_rows > 0) {
 
         // Check if water level reaches any thresholds
         $notify_info = '';
-        if ($water_level >= $threshold_danger) {
-            $notify_info = "Danger: Water level at station $station_name (device ID: $device_id) has reached the danger threshold.";
+        if ($water_level > $threshold_danger) {
+            $notify_info = "Danger: \r\nWater level at station $station_name \r\n(device ID: $device_id) has reached the danger threshold.";
         } elseif ($water_level >= $threshold_warning) {
-            $notify_info = "Warning: Water level at station $station_name (device ID: $device_id) has reached the warning threshold.";
+            $notify_info = "Warning: \r\nWater level at station $station_name \r\n(device ID: $device_id) has reached the warning threshold.";
         } elseif ($water_level >= $threshold_alert) {
-            $notify_info = "Alert: Water level at station $station_name (device ID: $device_id) has reached the alert threshold.";
+            $notify_info = "Alert: \r\nWater level at station $station_name \r\n(device ID: $device_id) has reached the alert threshold.";
         }
 
         // If a notification is required, insert it into the adminnotification table
