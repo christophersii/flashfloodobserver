@@ -1,5 +1,6 @@
-pymysql==1.0.2
+mysql-connector-python==8.0.33
+pymysql==1.0.3
 firebase-admin
-APScheduler==3.8.1
-requests==2.26.0
-python-dotenv==0.19.1
+APScheduler==3.10.1
+requests==2.29.0
+python-dotenv==1.0.0
