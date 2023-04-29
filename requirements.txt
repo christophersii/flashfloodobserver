@@ -1,5 +1,7 @@
 mysql-connector-python==8.0.33
-firebase-admin
+firebase-admin==6.1.0
 APScheduler==3.10.1
 requests==2.29.0
 python-dotenv==1.0.0
+pytz==2023.3
+pymysql==1.0.3
