@@ -1,4 +1,4 @@
-import pymysql
+import mysql.connector
 import time
 from fcm_push_notification import send_push_notifications
 
