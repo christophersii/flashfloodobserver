@@ -1,3 +1,4 @@
+mysql-connector-python==8.0.33
 firebase-admin
 APScheduler
 requests
