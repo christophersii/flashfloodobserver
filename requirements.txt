@@ -1,4 +1,3 @@
-mysql-connector-python
 firebase-admin
 APScheduler==3.8.1
 requests==2.26.0
