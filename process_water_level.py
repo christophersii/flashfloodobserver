@@ -1,5 +1,4 @@
 import subprocess
-subprocess.check_call(["pip", "install", "mysql-connector-python"])
 import mysql.connector
 from fcm_push_notification import send_push_notifications
 import time
