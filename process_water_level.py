@@ -1,6 +1,8 @@
+import subprocess
+subprocess.check_call(["pip", "install", "mysql-connector-python"])
 import mysql.connector
-import time
 from fcm_push_notification import send_push_notifications
+import time
 
 db_credentials = {
     'user': 'b005c8a97ae61d',
