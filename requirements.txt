@@ -1,7 +1,0 @@
-mysql-connector-python
-firebase-admin
-APScheduler
-requests
-python-dotenv
-pytz
-pymysql
