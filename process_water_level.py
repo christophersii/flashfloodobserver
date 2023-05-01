@@ -11,6 +11,16 @@ except ImportError:
     install("mysql-connector-python")
     import mysql.connector
 
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+try:
+    import requests
+except ImportError:
+    install("requests")
+    import requests
+
 from fcm_push_notification import send_push_notifications
 import time
 
