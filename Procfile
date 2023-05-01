@@ -1,1 +1,2 @@
-worker: python process_water_level.py
+web: vendor/bin/heroku-php-apache2 public/
+worker: python worker.py
