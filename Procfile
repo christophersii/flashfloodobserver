@@ -1,1 +1,1 @@
-worker: python process_water_level.py
+worker: pip install mysql-connector-python && python process_water_level.py
