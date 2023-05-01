@@ -20,7 +20,16 @@ try:
 except ImportError:
     install("requests")
     import requests
+    
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
+try:
+    import pymysql
+except ImportError:
+    install("pymysql")
+    import pymysql
+    
 from fcm_push_notification import send_push_notifications
 import time
 
