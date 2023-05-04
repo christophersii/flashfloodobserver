@@ -11,6 +11,12 @@ $dbname= "heroku_3442ee38bf9fb24";
 
 $conn= new mysqli($servername, $username, $password, $dbname);
 
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} 
+
+$conn->query("SET time_zone='+08:00'");
+
 // $servername= "localhost";
 // $username= "root";
 // $password= "";
