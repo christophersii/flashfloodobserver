@@ -14,7 +14,7 @@ $admin_notify_id = $_POST['admin_notify_id'];
 echo "Received admin_notify_id: " . $admin_notify_id . "\n";
 
 // Prepare a delete statement
-$sql = "DELETE FROM adminnotifications WHERE admin_notify_id = ?";
+$sql = "DELETE FROM adminnotification WHERE admin_notify_id = ?";
 
 if ($stmt = $conn->prepare($sql)) {
     echo "Statement prepared successfully\n";
