@@ -10,7 +10,7 @@ if ($conn->connect_error) {
 $admin_notify_id = $_POST['admin_notify_id'];
 
 // Prepare a delete statement
-$sql = "DELETE FROM adminnotifications WHERE admin_notify_id = ?";
+$sql = "DELETE FROM adminnotifications WHERE admin_notify_id = 11004";
 
 if ($stmt = $conn->prepare($sql)) {
     // Bind the admin_notify_id parameter to the prepared statement
