@@ -24,7 +24,11 @@ if ($stmt = $conn->prepare($sql)) {
 
     // Execute the statement
     if ($stmt->execute()) {
-        echo "Notification deleted successfully";
+      if ($stmt->affected_rows > 0) {
+          echo "Notification deleted successfully";
+      } else {
+          echo "No notification found with admin_notify_id: " . $admin_notify_id;
+      }
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
