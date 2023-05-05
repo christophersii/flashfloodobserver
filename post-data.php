@@ -5,6 +5,8 @@ error_reporting(E_ALL);
 
 include("config.php");
 
+date_default_timezone_set('Asia/Singapore');
+
 // Keep this API Key value to be compatible with the ESP32 code provided in the project page. If you change this value, the ESP32 sketch needs to match
 $api_key_value = "tPmAT5Ab3j7F9";
 
