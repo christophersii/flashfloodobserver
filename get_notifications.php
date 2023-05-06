@@ -10,7 +10,7 @@ if (isset($_POST['admin_id'])) {
     $sql = "SELECT an.admin_notify_id, an.notify_info, an.noti_time, an.device_id 
             FROM adminnotification an
             INNER JOIN sensor_device sd ON an.device_id = sd.device_id
-            WHERE sd.admin_id = ?
+            WHERE an.admin_id = ?
             ORDER BY an.noti_time DESC";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $admin_id);
