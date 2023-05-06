@@ -19,35 +19,49 @@ if (isset($_POST['device_id']) && isset($_POST['admin_sensor_device_id']) && iss
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $stmt = $conn->prepare("INSERT INTO station (station_name, latitude, longitude, drainage_depth, threshold_alert, threshold_warning, threshold_danger, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sddssssi", $station_name, $latitude, $longitude, $drainage_depth, $threshold_alert, $threshold_warning, $threshold_danger, $admin_id);
+    // Check if device_id already exists
+    $stmt_check = $conn->prepare("SELECT device_id FROM sensor_device WHERE device_id = ?");
+    $stmt_check->bind_param("s", $device_id);
+    $stmt_check->execute();
+    $stmt_check->store_result();
 
-    if ($stmt->execute()) {
-        $station_code = $conn->insert_id;
-
-        $stmt2 = $conn->prepare("INSERT INTO sensor_device (device_id, station_code) VALUES (?, ?)");
-        $stmt2->bind_param("si", $device_id, $station_code);
-
-        if ($stmt2->execute()) {
-            $device_id_fk = $conn->insert_id;
-
-            $stmt3 = $conn->prepare("INSERT INTO admin_sensor_device (device_id, admin_id) VALUES (?, ?)");
-            $stmt3->bind_param("ii", $device_id_fk, $admin_id);
-
-            if ($stmt3->execute()) {
-                $response['success'] = true;
-            } else {
-                $response['message'] = "Error inserting admin_sensor_device: " . $stmt3->error;
-            }
-            $stmt3->close();
-        } else {
-            $response['message'] = "Error inserting device: " . $stmt2->error;
-        }
-        $stmt2->close();
+    if ($stmt_check->num_rows > 0) {
+        $response['message'] = "Error: device_id already exists";
+        $stmt_check->close();
     } else {
-        $response['message'] = "Error inserting station: " . $stmt->error;
+        $stmt_check->close();
+
+        // Proceed with the insertion
+        $stmt = $conn->prepare("INSERT INTO station (station_name, latitude, longitude, drainage_depth, threshold_alert, threshold_warning, threshold_danger, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sddssssi", $station_name, $latitude, $longitude, $drainage_depth, $threshold_alert, $threshold_warning, $threshold_danger, $admin_id);
+
+        if ($stmt->execute()) {
+            $station_code = $conn->insert_id;
+
+            $stmt2 = $conn->prepare("INSERT INTO sensor_device (device_id, station_code) VALUES (?, ?)");
+            $stmt2->bind_param("si", $device_id, $station_code);
+
+            if ($stmt2->execute()) {
+                $device_id_fk = $conn->insert_id;
+
+                $stmt3 = $conn->prepare("INSERT INTO admin_sensor_device (device_id, admin_id) VALUES (?, ?)");
+                $stmt3->bind_param("ii", $device_id_fk, $admin_id);
+
+                if ($stmt3->execute()) {
+                    $response['success'] = true;
+                } else {
+                    $response['message'] = "Error inserting admin_sensor_device: " . $stmt3->error;
+                }
+                $stmt3->close();
+            } else {
+                $response['message'] = "Error inserting device: " . $stmt2->error;
+            }
+            $stmt2->close();
+        } else {
+            $response['message'] = "Error inserting station: " . $stmt->error;
+        }
+        $stmt->close();
     }
-    $stmt->close();
     $conn->close();
 }
 
