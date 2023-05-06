@@ -22,7 +22,8 @@ if (isset($_POST['admin_id'])) {
                 'admin_notify_id' => $row['admin_notify_id'],
                 'notify_info' => $row['notify_info'],
                 'noti_time' => $row['noti_time'],
-                'device_id' => $row['device_id']
+                'device_id' => $row['device_id'],
+                'admin_id' => $admin_id
             );
 
             array_push($response, $notification);
