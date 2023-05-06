@@ -6,7 +6,14 @@ $response = array('success' => false);
 
 if (isset($_POST['device_id']) && isset($_POST['admin_ids']) && isset($_POST['station_name']) && isset($_POST['latitude']) && isset($_POST['longitude']) && isset($_POST['drainage_depth']) && isset($_POST['threshold_alert']) && isset($_POST['threshold_warning']) && isset($_POST['threshold_danger'])) {
     $device_id = $_POST['device_id'];
-    $admin_ids = $_POST['admin_ids'];
+    $admin_ids_json = $_POST['admin_ids'];
+    $admin_ids = json_decode($admin_ids_json, true);
+    // Check if the decoded value is an array
+    if (!is_array($admin_ids)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid admin_ids value.']);
+        exit();
+    }
     $station_name = $_POST['station_name'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
