@@ -5,6 +5,7 @@ $response = array();
 
 if (isset($_POST['admin_id'])) {
     $admin_id = $_POST['admin_id'];
+    echo "Admin ID: $admin_id";
 
     $sql = "SELECT an.admin_notify_id, an.notify_info, an.noti_time, an.device_id 
             FROM adminnotification an
