@@ -4,9 +4,9 @@ require_once 'config.php';
 
 $response = array('success' => false);
 
-if (isset($_POST['device_id']) && isset($_POST['admin_sensor_device_id']) && isset($_POST['station_name']) && isset($_POST['latitude']) && isset($_POST['longitude']) && isset($_POST['drainage_depth']) && isset($_POST['threshold_alert']) && isset($_POST['threshold_warning']) && isset($_POST['threshold_danger'])) {
+if (isset($_POST['device_id']) && isset($_POST['admin_ids']) && isset($_POST['station_name']) && isset($_POST['latitude']) && isset($_POST['longitude']) && isset($_POST['drainage_depth']) && isset($_POST['threshold_alert']) && isset($_POST['threshold_warning']) && isset($_POST['threshold_danger'])) {
     $device_id = $_POST['device_id'];
-    $admin_id = $_POST['admin_sensor_device_id'];
+    $admin_ids = $_POST['admin_ids'];
     $station_name = $_POST['station_name'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
@@ -32,8 +32,8 @@ if (isset($_POST['device_id']) && isset($_POST['admin_sensor_device_id']) && iss
         $stmt_check->close();
 
         // Proceed with the insertion
-        $stmt = $conn->prepare("INSERT INTO station (station_name, latitude, longitude, drainage_depth, threshold_alert, threshold_warning, threshold_danger, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sddssssi", $station_name, $latitude, $longitude, $drainage_depth, $threshold_alert, $threshold_warning, $threshold_danger, $admin_id);
+        $stmt = $conn->prepare("INSERT INTO station (station_name, latitude, longitude, drainage_depth, threshold_alert, threshold_warning, threshold_danger) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sddssss", $station_name, $latitude, $longitude, $drainage_depth, $threshold_alert, $threshold_warning, $threshold_danger);
 
         if ($stmt->execute()) {
             $station_code = $conn->insert_id;
@@ -45,26 +45,35 @@ if (isset($_POST['device_id']) && isset($_POST['admin_sensor_device_id']) && iss
                 $device_id_fk = $conn->insert_id;
 
                 $stmt3 = $conn->prepare("INSERT INTO admin_sensor_device (device_id, admin_id) VALUES (?, ?)");
-                $stmt3->bind_param("ii", $device_id_fk, $admin_id);
+                $success_count = 0;
 
-                if ($stmt3->execute()) {
+                foreach ($admin_ids as $admin_id) {
+                    $stmt3->bind_param("ii", $device_id_fk, $admin_id);
+
+                    if ($stmt3->execute()) {
+                        $success_count++;
+                    }
+                }
+
+                if ($success_count == count($admin_ids)) {
                     $response['success'] = true;
                 } else {
-                    $response['message'] = "Error inserting admin_sensor_device: " . $stmt3->error;
+                    $response['message'] = "Error inserting some admin_sensor_device entries: " . $stmt3->error;
                 }
+                
                 $stmt3->close();
-            } else {
-                $response['message'] = "Error inserting device: " . $stmt2->error;
-            }
-            $stmt2->close();
-        } else {
-            $response['message'] = "Error inserting station: " . $stmt->error;
+                } else {
+                    $response['message'] = "Error inserting device: " . $stmt2->error;
+                }
+            
+                $stmt2->close();
+                } else {
+                    $response['message'] = "Error inserting station: " . $stmt->error;
+                }
+            $stmt->close();
         }
-        $stmt->close();
-    }
     $conn->close();
 }
 
 echo json_encode($response);
-
 ?>
