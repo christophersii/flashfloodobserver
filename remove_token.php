@@ -11,7 +11,8 @@ function removeTokenFromDB($token, $conn) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $tokensToRemove = explode(',', $_POST['tokens']);
+    $data = json_decode(file_get_contents('php://input'), true);
+    $tokensToRemove = $data['tokens'];
 
     foreach ($tokensToRemove as $token) {
         if (removeTokenFromDB($token, $conn)) {
@@ -23,5 +24,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     mysqli_close($conn);
 }
-
 ?>
