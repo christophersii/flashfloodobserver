@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         date_default_timezone_set("Asia/Kuala_Lumpur");
 
         // Get current date
-        $current_date = date('Y-m-d H:i:s');
+        $reading_time = date('Y-m-d H:i:s');
 
         $sql = "INSERT INTO sensor_reading (device_id, water_level, rainfall, temperature, humidity, timestamp)
         VALUES ('" . $device_id . "', '" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "', '" . $reading_time . "')";
