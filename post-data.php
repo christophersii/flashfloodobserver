@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $current_date = date('Y-m-d H:i:s');
 
         $sql = "INSERT INTO sensor_reading (device_id, water_level, rainfall, temperature, humidity, timestamp)
-        VALUES ('" . $device_id . "', '" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "', '" . $current_date . "')";
+        VALUES ('" . $device_id . "', '" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "', '" . $reading_time . "')";
         
         if ($conn->query($sql) === TRUE) {
             echo "New record created successfully";
