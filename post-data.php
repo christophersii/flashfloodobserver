@@ -5,9 +5,10 @@ error_reporting(E_ALL);
 
 include("config.php");
 
+// Keep this API Key value to be compatible with the ESP32 code provided in the project page. If you change this value, the ESP32 sketch needs to match
 $api_key_value = "tPmAT5Ab3j7F9";
 
-$api_key = $device_id = $water_level = $rainfall = $temperature = $humidity = "";
+$api_key = $device_id = $water_level = $rainfall = $temperature = $humidity ="";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $api_key = test_input($_POST["api_key"]);
@@ -24,15 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         } 
-
-        // Set timezone
-        date_default_timezone_set("Asia/Kuala_Lumpur");
-
-        // Get current date
-        $reading_time = date('Y-m-d H:i:s');
-
-        $sql = "INSERT INTO sensor_reading (device_id, water_level, rainfall, temperature, humidity, timestamp)
-        VALUES ('" . $device_id . "', '" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "', '" . $reading_time . "')";
+        
+        $sql = "INSERT INTO sensor_reading (device_id, water_level, rainfall, temperature, humidity)
+        VALUES ('" . $device_id . "', '" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "')";
         
         if ($conn->query($sql) === TRUE) {
             echo "New record created successfully";
