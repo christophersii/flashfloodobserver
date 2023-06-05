@@ -12,40 +12,38 @@ $device_id = $_POST['device_id'];
 
 // make sure data is not empty
 if(!empty($device_id)){
-    try {
-        // get database connection
-        $database = new Database();
-        $db = $database->getConnection();
-
-        // query to check if device_id exists
-        $query = "SELECT COUNT(*) FROM sensor_device WHERE device_id = :device_id";
-        $stmt = $db->prepare($query);
-
-        // bind id of product to be updated
-        $stmt->bindParam(":device_id", $device_id);
-
-        // execute query
-        $stmt->execute();
-
-        // get retrieved row
-        $num = $stmt->fetchColumn();
-
-        if($num>0){
-            // device exists
-            http_response_code(200);
-            echo json_encode(array("exists" => true));
-        }
-        else{
-            // device does not exist
-            http_response_code(200);
-            echo json_encode(array("exists" => false));
-        }
+    // check if the connection is successful
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
-    catch(PDOException $exception){
-        // on error
-        http_response_code(500);
-        echo json_encode(array("message" => "Error processing your request.", "error" => $exception->getMessage()));
+
+    // query to check if device_id exists
+    $query = "SELECT COUNT(*) FROM sensor_device WHERE device_id = ?";
+    $stmt = $conn->prepare($query);
+
+    // bind id of product to be updated
+    $stmt->bind_param("s", $device_id);
+
+    // execute query
+    $stmt->execute();
+
+    // get retrieved row
+    $stmt->bind_result($num);
+    $stmt->fetch();
+
+    if($num>0){
+        // device exists
+        http_response_code(200);
+        echo json_encode(array("exists" => true));
     }
+    else{
+        // device does not exist
+        http_response_code(200);
+        echo json_encode(array("exists" => false));
+    }
+
+    $stmt->close();
+    $conn->close();
 }
 else{
     // data is incomplete
