@@ -8,10 +8,10 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once 'config.php';
 
 // get posted data
-$data = json_decode(file_get_contents("php://input"));
+$device_id = $_POST['device_id'];
 
 // make sure data is not empty
-if(!empty($data->device_id)){
+if(!empty($device_id)){
     try {
         // get database connection
         $database = new Database();
@@ -22,7 +22,7 @@ if(!empty($data->device_id)){
         $stmt = $db->prepare($query);
 
         // bind id of product to be updated
-        $stmt->bindParam(":device_id", $data->device_id);
+        $stmt->bindParam(":device_id", $device_id);
 
         // execute query
         $stmt->execute();
