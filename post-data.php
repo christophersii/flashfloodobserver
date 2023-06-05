@@ -9,6 +9,7 @@ include("config.php");
 $api_key_value = "tPmAT5Ab3j7F9";
 
 $api_key = $device_id = $water_level = $rainfall = $temperature = $humidity ="";
+$connectivity_type = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $api_key = test_input($_POST["api_key"]);
@@ -18,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $rainfall = test_input($_POST["rainfall"]);
         $temperature = test_input($_POST["temperature"]);
         $humidity = test_input($_POST["humidity"]);
+        $connectivity_type = test_input($_POST["connectivity_type"]);
         
         // Create connection
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -26,8 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Connection failed: " . $conn->connect_error);
         } 
         
-        $sql = "INSERT INTO sensor_reading (device_id, water_level, rainfall, temperature, humidity)
-        VALUES ('" . $device_id . "', '" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "')";
+        $sql = "INSERT INTO sensor_reading (device_id, water_level, rainfall, temperature, humidity, connectivity_type)
+        VALUES ('" . $device_id . "', '" . $water_level . "', '" . $rainfall . "', '" . $temperature . "', '" . $humidity . "', '" . $connectivity_type . "')";
         
         if ($conn->query($sql) === TRUE) {
             echo "New record created successfully";
