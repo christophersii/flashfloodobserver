@@ -10,7 +10,7 @@ if (!$conn) {
 
 $data = array(); // initialize an empty array to hold the data
 
-$station_result = $conn->query("SELECT station.station_code, station.station_name, station.drainage_depth, sensor_reading.water_level, sensor_reading.reading_time, sensor_device.device_id FROM station 
+$station_result = $conn->query("SELECT station.station_code, station.station_name, station.drainage_depth, sensor_reading.water_level, station.drainage_depth - sensor_reading.water_level AS drainage_water_level, sensor_reading.reading_time, sensor_device.device_id FROM station 
 JOIN sensor_device ON station.station_code = sensor_device.station_code
 JOIN sensor_reading ON sensor_reading.device_id = sensor_device.device_id
 WHERE sensor_reading.reading_time = (SELECT MAX(reading_time) FROM sensor_reading WHERE device_id = sensor_device.device_id)");
@@ -22,20 +22,21 @@ while ($station_row = $station_result->fetch_assoc()) {
     $water_level = $station_row["water_level"];
     $reading_time = $station_row["reading_time"];
     $drainage_depth = $station_row["drainage_depth"];
-    
+   // Subtract water level from drainage depth
+   $drainage_water_level = $drainage_depth - $water_level;
 
-    // Calculate the normal, alert, warning, and danger levels based on the water level data
+    // Calculate the normal, alert, warning, and danger levels based on the drainage water level data
     $normal_level = $drainage_depth * 0.5;
     $warning_level = $drainage_depth * 0.7;
     $danger_level = $drainage_depth;
     $level = "";
-    if ($water_level < $normal_level) {
+    if ($drainage_water_level >= $danger_level) {
         $level = "Normal";
-    } elseif ($water_level >= $normal_level && $water_level < $warning_level) {
+    } elseif ($drainage_water_level < $danger_level && $drainage_water_level >= $warning_level) {
         $level = "Alert";
-    } elseif ($water_level >= $warning_level && $water_level < $danger_level) {
+    } elseif ($drainage_water_level < $warning_level && $drainage_water_level >= $normal_level) {
         $level = "Warning";
-    } elseif ($water_level >= $danger_level) {
+    } elseif ($drainage_water_level < $normal_level) {
         $level = "Danger";
     }
 
@@ -49,6 +50,7 @@ while ($station_row = $station_result->fetch_assoc()) {
         'warning_level' => $warning_level,
         'danger_level' => $danger_level,
         'level' => $level,
+        'drainage_water_level' => $drainage_water_level,
     );
 
     // Check if there are any existing rows in the setting table for this station code
