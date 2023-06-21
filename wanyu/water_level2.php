@@ -58,11 +58,11 @@ while ($station_row = $station_result->fetch_assoc()) {
     $existing_result = $conn->query("SELECT * FROM setting WHERE station_code='$station_id'");
     if ($existing_result !== false && mysqli_num_rows($existing_result) > 0) {
         // Update the existing row with the new water level data, level and reading_time
-        $conn->query("UPDATE setting SET station_name='$station_name', water_level='$water_level', reading_time='$reading_time', normal_level='$normal_level', warning_level='$warning_level', danger_level='$danger_level', level='$level', device_id='$device_id' WHERE station_code='$station_id'");
+        $conn->query("UPDATE setting SET station_name='$station_name', water_level='$water_level', reading_time='$reading_time', normal_level='$normal_level', warning_level='$warning_level', danger_level='$danger_level', level='$level', device_id='$device_id', drainage_water_level='$drainage_water_level' WHERE station_code='$station_id'");
     }
     else{
         // Insert a new row with the water level data, level and reading_time
-        $conn->query("INSERT INTO setting (station_code, station_name, water_level, reading_time, normal_level, warning_level, danger_level, level, device_id) VALUES ('$station_id', '$station_name','$water_level', '$reading_time', '$normal_level', '$warning_level', '$danger_level', '$level', '$device_id')");
+        $conn->query("INSERT INTO setting (station_code, station_name, water_level, reading_time, normal_level, warning_level, danger_level, level, device_id, drainage_water_level) VALUES ('$station_id', '$station_name','$water_level', '$reading_time', '$normal_level', '$warning_level', '$danger_level', '$level', '$device_id', '$drainage_water_level')");
     }
     
 }
