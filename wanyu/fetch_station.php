@@ -7,7 +7,7 @@ if (!$conn) {
 }
 
 
-$sql = "SELECT setting.setting_id, setting.station_code, setting.station_name, setting.level, station.longitude, station.latitude, station.drainage_depth, sensor_reading.water_level, sensor_reading.reading_time 
+$sql = "SELECT setting.setting_id, setting.station_code, setting.station_name, setting.level, setting.drainage_water_level, station.longitude, station.latitude, station.drainage_depth, sensor_reading.water_level, sensor_reading.reading_time 
         FROM setting
         JOIN station ON setting.station_code = station.station_code
         JOIN sensor_device ON station.station_code = sensor_device.station_code
@@ -30,6 +30,7 @@ if ($result->num_rows > 0) {
         $readingTime = strval($row["reading_time"]);
         $level = strval($row["level"]);
         $reading_time = strval($row["reading_time"]);
+        $drainage_water_level = strval($row["drainage_water_level"]);
 
         $data[] = array(
             'setting_id' => $settingId,
@@ -41,7 +42,8 @@ if ($result->num_rows > 0) {
             'water_level' => $waterLevel,
             'reading_time' => $readingTime,
             'level' => $level,
-            'reading_time' => $reading_time
+            'reading_time' => $reading_time,
+            'drainage_water_level' => $drainage_water_level
         );
     }
 }
