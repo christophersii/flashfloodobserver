@@ -10,7 +10,7 @@ if (!$conn) {
 $user_id = $_GET['user_id'];
 
 // Retrieve the user's added stations and their latest readings from the database
-$sql = "SELECT user_station.levels, setting.setting_id, setting.station_code, setting.station_name, setting.level,station.longitude, station.latitude, sensor_reading.water_level, sensor_reading.reading_time
+$sql = "SELECT user_station.levels, setting.setting_id, setting.station_code, setting.station_name, setting.level, setting.drainage_water_level, station.longitude, station.latitude, sensor_reading.water_level, sensor_reading.reading_time
         FROM user_station
         JOIN setting ON user_station.setting_id = setting.setting_id
         JOIN station ON setting.station_code = station.station_code
@@ -33,6 +33,7 @@ if ($result->num_rows > 0) {
         $readingTime = strval($row["reading_time"]);
         $level = strval($row["level"]);
         $levels = strval($row["levels"]);
+        $drainage_water_level = strval($row["drainage_water_level"]);
 
         $data[] = array(
             'setting_id' => $settingId,
@@ -44,6 +45,7 @@ if ($result->num_rows > 0) {
             'reading_time' => $readingTime,
             'level' => $level,
             'levels' => $levels
+            'drainage_water_level' => $drainage_water_level
         );
     }
 }
