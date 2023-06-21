@@ -25,18 +25,18 @@ while ($station_row = $station_result->fetch_assoc()) {
    // Subtract water level from drainage depth
    $drainage_water_level = $drainage_depth - $water_level;
 
-    // Calculate the normal, alert, warning, and danger levels based on the drainage water level data
+    // Calculate the normal, alert, warning, and danger levels based on the water level data
     $normal_level = $drainage_depth * 0.5;
     $warning_level = $drainage_depth * 0.7;
     $danger_level = $drainage_depth;
     $level = "";
-    if ($drainage_water_level >= $danger_level) {
+    if ($drainage_water_level < $normal_level) {
         $level = "Normal";
-    } elseif ($drainage_water_level < $danger_level && $drainage_water_level >= $warning_level) {
+    } elseif ($drainage_water_level >= $normal_level && $drainage_water_level < $warning_level) {
         $level = "Alert";
-    } elseif ($drainage_water_level < $warning_level && $drainage_water_level >= $normal_level) {
+    } elseif ($drainage_water_level >= $warning_level && $drainage_water_level < $danger_level) {
         $level = "Warning";
-    } elseif ($drainage_water_level < $normal_level) {
+    } elseif ($drainage_water_level >= $danger_level) {
         $level = "Danger";
     }
 
