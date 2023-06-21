@@ -1,0 +1,181 @@
+CREATE TRIGGER `update_setting_water_level` AFTER INSERT ON `sensor_reading`
+ FOR EACH ROW BEGIN
+    UPDATE setting
+    SET water_level = NEW.water_level,
+        normal_level = (SELECT station.drainage_depth * 0.5 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code),
+        warning_level = (SELECT station.drainage_depth * 0.7 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code),
+        danger_level = (SELECT station.drainage_depth FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code),
+        level = CASE
+                    WHEN NEW.water_level < (SELECT station.drainage_depth * 0.5 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) THEN 'Normal'
+                    WHEN NEW.water_level >= (SELECT station.drainage_depth * 0.5 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) AND NEW.water_level < (SELECT station.drainage_depth * 0.7 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) THEN 'Alert'
+                    WHEN NEW.water_level >= (SELECT station.drainage_depth * 0.7 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) AND NEW.water_level < (SELECT station.drainage_depth FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) THEN 'Warning'
+                    ELSE 'Danger'
+                END
+    WHERE station_code = (SELECT station_code FROM sensor_device WHERE device_id = NEW.device_id);
+END
+
+CREATE TRIGGER `update_setting_drainage_depth` AFTER UPDATE ON `station`
+ FOR EACH ROW BEGIN
+    UPDATE setting
+    SET normal_level = (SELECT NEW.drainage_depth * 0.5 FROM sensor_device WHERE sensor_device.station_code = NEW.station_code),
+        warning_level = (SELECT NEW.drainage_depth * 0.7 FROM sensor_device WHERE sensor_device.station_code = NEW.station_code),
+        danger_level = NEW.drainage_depth,
+        level = CASE
+                    WHEN setting.water_level < (NEW.drainage_depth * 0.5) THEN 'Normal'
+                    WHEN setting.water_level >= (NEW.drainage_depth * 0.5) AND setting.water_level < (NEW.drainage_depth * 0.7) THEN 'Alert'
+                    WHEN setting.water_level >= (NEW.drainage_depth * 0.7) AND setting.water_level < NEW.drainage_depth THEN 'Warning'
+                    ELSE 'Danger'
+                END
+    WHERE station_code = NEW.station_code;
+END
+
+
+CREATE TRIGGER `update_setting_water_level` AFTER INSERT ON `sensor_reading`
+ FOR EACH ROW BEGIN
+    UPDATE setting
+    SET water_level = NEW.water_level,
+        normal_level = (SELECT station.drainage_depth * 0.5 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code),
+        warning_level = (SELECT station.drainage_depth * 0.7 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code),
+        danger_level = (SELECT station.drainage_depth FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code),
+        level = CASE
+                    WHEN NEW.water_level < (SELECT station.drainage_depth * 0.5 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) THEN 'Normal'
+                    WHEN NEW.water_level >= (SELECT station.drainage_depth * 0.5 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) AND NEW.water_level < (SELECT station.drainage_depth * 0.7 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) THEN 'Alert'
+                    WHEN NEW.water_level >= (SELECT station.drainage_depth * 0.7 FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) AND NEW.water_level < (SELECT station.drainage_depth FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code) THEN 'Warning'
+                    ELSE 'Danger'
+                END
+    WHERE station_code = (SELECT station_code FROM sensor_device WHERE device_id = NEW.device_id)
+    AND device_id = NEW.device_id;
+END
+
+
+||||||||||||||||||||||||||||||
+
+//latest
+
+CREATE TRIGGER `update_setting_water_level` AFTER INSERT ON `sensor_reading`
+ FOR EACH ROW BEGIN
+    DECLARE new_drainage_depth DECIMAL(10,2);
+
+    SELECT CAST(station.drainage_depth AS DECIMAL(10,2)) INTO new_drainage_depth FROM station, sensor_device WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code;
+
+    UPDATE setting
+    SET water_level = NEW.water_level,
+        normal_level = new_drainage_depth * 0.5,
+        warning_level = new_drainage_depth * 0.7,
+        danger_level = new_drainage_depth,
+        level = CASE
+                    WHEN NEW.water_level < new_drainage_depth * 0.5 THEN 'Normal'
+                    WHEN NEW.water_level >= new_drainage_depth * 0.5 AND NEW.water_level < new_drainage_depth * 0.7 THEN 'Alert'
+                    WHEN NEW.water_level >= new_drainage_depth * 0.7 AND NEW.water_level < new_drainage_depth THEN 'Warning'
+                    ELSE 'Danger'
+                END
+    WHERE station_code = (SELECT station_code FROM sensor_device WHERE device_id = NEW.device_id)
+    AND device_id = NEW.device_id;
+END
+
+
+
+\\\\\\\\\\\\\\\\\\\\\
+
+31/5/2023
+
+DELIMITER //
+
+CREATE TRIGGER update_setting_water_level AFTER INSERT ON sensor_reading
+FOR EACH ROW 
+BEGIN
+    DECLARE new_drainage_depth DECIMAL(10,2);
+
+    SELECT CAST(station.drainage_depth AS DECIMAL(10,2)) 
+    INTO new_drainage_depth 
+    FROM station, sensor_device 
+    WHERE sensor_device.device_id = NEW.device_id AND station.station_code = sensor_device.station_code;
+
+    UPDATE setting
+    SET water_level = NEW.water_level,
+        normal_level = new_drainage_depth * 0.5,
+        warning_level = new_drainage_depth * 0.7,
+        danger_level = new_drainage_depth,
+        level = CASE
+                    WHEN NEW.water_level < new_drainage_depth * 0.5 THEN 'Normal'
+                    WHEN NEW.water_level >= new_drainage_depth * 0.5 AND NEW.water_level < new_drainage_depth * 0.7 THEN 'Alert'
+                    WHEN NEW.water_level >= new_drainage_depth * 0.7 AND NEW.water_level < new_drainage_depth THEN 'Warning'
+                    ELSE 'Danger'
+                END
+    WHERE station_code = (SELECT station_code FROM sensor_device WHERE device_id = NEW.device_id)
+    AND device_id = NEW.device_id;
+END//
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER `update_setting_drainage_depth` AFTER UPDATE ON `station`
+ FOR EACH ROW BEGIN
+    UPDATE setting
+    SET normal_level = (SELECT NEW.drainage_depth * 0.5 FROM sensor_device WHERE sensor_device.station_code = NEW.station_code),
+        warning_level = (SELECT NEW.drainage_depth * 0.7 FROM sensor_device WHERE sensor_device.station_code = NEW.station_code),
+        danger_level = NEW.drainage_depth,
+        level = CASE
+                    WHEN setting.water_level < (NEW.drainage_depth * 0.5) THEN 'Normal'
+                    WHEN setting.water_level >= (NEW.drainage_depth * 0.5) AND setting.water_level < (NEW.drainage_depth * 0.7) THEN 'Alert'
+                    WHEN setting.water_level >= (NEW.drainage_depth * 0.7) AND setting.water_level < NEW.drainage_depth THEN 'Warning'
+                    ELSE 'Danger'
+                END
+    WHERE station_code = NEW.station_code;
+END//
+
+DELIMITER ;
+
+CREATE TABLE `setting` (
+ `setting_id` int(10) NOT NULL AUTO_INCREMENT,
+ `station_code` int(10) NOT NULL,
+ `device_id` varchar(16) DEFAULT NULL,
+ `station_name` varchar(255) NOT NULL,
+ `water_level` varchar(10) NOT NULL,
+ `reading_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+ `normal_level` varchar(10) NOT NULL,
+ `warning_level` varchar(10) NOT NULL,
+ `danger_level` varchar(10) NOT NULL,
+ `level` varchar(10) NOT NULL,
+ PRIMARY KEY (`setting_id`),
+ UNIQUE KEY `station_code` (`station_code`),
+ KEY `FK_setting_sensor_device` (`device_id`),
+ CONSTRAINT `FK_setting_sensor_device` FOREIGN KEY (`device_id`) REFERENCES `sensor_device` (`device_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+ CONSTRAINT `settings_station` FOREIGN KEY (`station_code`) REFERENCES `station` (`station_code`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+
+CREATE TABLE `station` (
+ `station_code` int(10) NOT NULL AUTO_INCREMENT,
+ `station_name` varchar(255) NOT NULL,
+ `latitude` decimal(10,8) NOT NULL,
+ `longitude` decimal(11,8) NOT NULL,
+ `threshold_alert` varchar(255) NOT NULL DEFAULT '',
+ `threshold_warning` varchar(255) NOT NULL DEFAULT '',
+ `threshold_danger` varchar(255) NOT NULL DEFAULT '',
+ `drainage_depth` varchar(255) DEFAULT NULL,
+ `admin_id` int(11) DEFAULT NULL,
+ PRIMARY KEY (`station_code`) USING BTREE,
+ KEY `station_admin` (`admin_id`),
+ CONSTRAINT `station_admin` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`admin_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+
+CREATE TABLE `user` (
+ `user_id` int(10) NOT NULL AUTO_INCREMENT,
+ `username` varchar(255) NOT NULL,
+ `password` varchar(255) NOT NULL,
+ `user_email` varchar(255) NOT NULL,
+ PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+
+CREATE TABLE `user_station` (
+ `id` int(10) NOT NULL AUTO_INCREMENT,
+ `user_id` int(10) NOT NULL,
+ `setting_id` int(10) NOT NULL,
+ `levels` varchar(255) NOT NULL,
+ PRIMARY KEY (`id`),
+ KEY `user_id` (`user_id`),
+ KEY `setting_id` (`setting_id`),
+ CONSTRAINT `user_station_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+ CONSTRAINT `user_station_ibfk_2` FOREIGN KEY (`setting_id`) REFERENCES `setting` (`setting_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
