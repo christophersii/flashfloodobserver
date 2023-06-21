@@ -8,11 +8,13 @@ if ($conn->connect_error) {
 }
 
 // Get the user_id from the query string
-
+$user_id = $_GET['user_id'];
 
 // Prepare the SQL statement
-$stmt = $conn->prepare("SELECT * FROM user_notification WHERE user_id = 1 ORDER BY notify_id DESC");
-
+$stmt = $conn->prepare("SELECT * FROM user_notification WHERE user_id = ? ORDER BY notify_id DESC");
+ 
+// Bind the parameter to the SQL statement
+$stmt->bind_param("i", $user_id);
 
 // Execute the SQL statement
 $stmt->execute();
