@@ -28,7 +28,7 @@ while ($station_row = $station_result->fetch_assoc()) {
     // Calculate the normal, alert, warning, and danger levels based on the water level data
     $normal_level = $drainage_depth * 0.5;
     $warning_level = $drainage_depth * 0.7;
-    $danger_level = $drainage_depth;
+    $danger_level = $drainage_depth -  30;
     $level = "";
     if ($drainage_water_level < $normal_level) {
         $level = "Normal";
