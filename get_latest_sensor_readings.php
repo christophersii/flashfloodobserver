@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 $admin_id = $_POST['admin_id'];
 
 // Prepare SQL query to fetch the stations and their latest sensor readings
-$sql = "SELECT s.station_code, s.station_name, s.latitude, s.longitude, s.threshold_alert, s.threshold_warning, s.threshold_danger, s.drainage_depth, sr.water_level, sr.rainfall, sr.temperature, sr.humidity, s.drainage_depth - sr.water_level AS drainage_water_level, sr.reading_time
+$sql = "SELECT s.station_code, s.station_name, s.latitude, s.longitude, s.threshold_alert, s.threshold_warning, s.threshold_danger, s.drainage_depth, sr.water_level, sr.rainfall, sr.temperature, sr.humidity, s.drainage_depth - (sr.water_level - 30) AS drainage_water_level, sr.reading_time
 FROM station s
 LEFT JOIN sensor_device sd ON s.station_code = sd.station_code
 LEFT JOIN sensor_reading sr ON sd.device_id = sr.device_id AND sr.reading_id IN (
