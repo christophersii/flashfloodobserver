@@ -23,7 +23,7 @@ while ($station_row = $station_result->fetch_assoc()) {
     $reading_time = $station_row["reading_time"];
     $drainage_depth = $station_row["drainage_depth"];
    // Subtract water level from drainage depth
-   $drainage_water_level = $drainage_depth - ($water_level -25);
+   $drainage_water_level = $drainage_depth - ($water_level -30);
                                                            
     // Calculate the normal, alert, warning, and danger levels based on the water level data
     $normal_level = $drainage_depth * 0.5;
