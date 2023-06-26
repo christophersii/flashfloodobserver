@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 
 $station_code = $_POST['station_code'];
 
-$sql = "SELECT sr.device_id, sr.reading_id, sr.water_level, s.drainage_depth - sr.water_level AS drainage_water_level, sr.rainfall, sr.temperature, sr.humidity, sr.reading_time 
+$sql = "SELECT sr.device_id, sr.reading_id, sr.water_level, s.drainage_depth - (sr.water_level - 30) AS drainage_water_level, sr.rainfall, sr.temperature, sr.humidity, sr.reading_time 
 FROM sensor_reading sr
 JOIN sensor_device sd ON sr.device_id = sd.device_id
 JOIN station s ON sd.station_code = s.station_code
