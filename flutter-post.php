@@ -23,6 +23,15 @@ LIMIT 10";
 
 $result = $conn->query($sql);
 
+$sql2 = "SELECT threshold_alert, threshold_warning, threshold_danger FROM station WHERE station_code = '$station_code'";
+
+$result2 = $conn->query($sql2);
+
+$thresholds = array();
+if ($result2->num_rows > 0) {
+    $thresholds = $result2->fetch_assoc();
+}
+
 $data = array();
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -36,7 +45,10 @@ $response = array(
     'drainage_water_level' => array(),
     'rainfall' => array(),
     'temperature' => array(),
-    'humidity' => array()
+    'humidity' => array(),
+    'threshold_alert' => $thresholds['threshold_alert'],
+    'threshold_warning' => $thresholds['threshold_warning'],
+    'threshold_danger' => $thresholds['threshold_danger']
 );
 
 foreach ($data as $row) {
